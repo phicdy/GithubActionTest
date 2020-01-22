@@ -5,9 +5,8 @@ on:
     types: [submitted]
     branches:
     - master
-  push:
-    branches:
-    - master
+  pull_request:
+    types: synchronize
 
 jobs:
   unit_test:
