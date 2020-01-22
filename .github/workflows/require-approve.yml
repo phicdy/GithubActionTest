@@ -1,0 +1,21 @@
+name: require-approvement
+
+on:
+  pull_request_review:
+    types: [submitted]
+    branches:
+    - master
+  pull_request:
+    types: synchronize
+
+jobs:
+  unit_test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+    - name: Test
+      run: python require-approve.py
