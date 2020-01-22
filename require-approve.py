@@ -21,9 +21,10 @@ with open(os.environ.get('GITHUB_EVENT_PATH')) as f:
     pr_event = event["pull_request"]
     print(pr_event)
 
-# collaborators_endpoint = event["repository"]["collaborators_url"].split("{")[0]
+reviews_endpoint = pr_event["_links"]["self"]["href"] + "/reviews"
 
-# req = create_github_request(collaborators_endpoint)
+req = create_github_request(reviews_endpoint)
+print(req)
 # with urllib.request.urlopen(req) as response:
 #     res = json.load(response)
 #     new_reviewer = random.choice(res)
