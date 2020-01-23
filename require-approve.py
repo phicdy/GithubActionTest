@@ -12,14 +12,14 @@ GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
 
 def create_github_request(url, data=None):
     req = urllib.request.Request(url, data)
-    req.add_header('authorization', f'Bearer {GITHUB_TOKEN}')
+    req.add_header('Authorization', f'token {GITHUB_TOKEN}')
     return req
 
 # open event.json
 with open(os.environ.get('GITHUB_EVENT_PATH')) as f:
     event = json.load(f)
     pr_event = event["pull_request"]
-    #print(pr_event)
+    print(pr_event)
 
 reviews_endpoint = pr_event["_links"]["self"]["href"] + "/reviews"
 
