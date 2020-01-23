@@ -19,7 +19,7 @@ def create_github_request(url, data=None):
 with open(os.environ.get('GITHUB_EVENT_PATH')) as f:
     event = json.load(f)
     pr_event = event["pull_request"]
-    print(pr_event)
+    #print(pr_event)
 
 reviews_endpoint = pr_event["_links"]["self"]["href"] + "/reviews"
 
@@ -27,7 +27,9 @@ req = create_github_request(reviews_endpoint)
 with urllib.request.urlopen(req) as response:
     res = json.load(response)
     print(res)
-#     new_reviewer = random.choice(res)
+    for review in res:
+        user = review["user"]["login"]
+        print(user)
 
 #     reviewers.append(new_reviewer)
 
