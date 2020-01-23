@@ -12,7 +12,7 @@ GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
 
 def create_github_request(url, data=None):
     req = urllib.request.Request(url, data)
-    req.add_header('Authorization', f'token {GITHUB_TOKEN}')
+    req.add_header('authorization', f'Bearer {GITHUB_TOKEN}')
     return req
 
 # open event.json
