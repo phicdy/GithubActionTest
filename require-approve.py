@@ -19,7 +19,7 @@ def create_github_request(url, data=None):
 def post_github_request(url, data):
     req_statuses = create_github_request(url, json.dumps(data).encode())
     with urllib.request.urlopen(req_statuses) as response:
-        print(response)
+        print(json.load(response))
 
 
 with open(os.environ.get('GITHUB_EVENT_PATH')) as f:
@@ -32,6 +32,7 @@ with open(os.environ.get('GITHUB_EVENT_PATH')) as f:
     req = create_github_request(reviews_endpoint)
     with urllib.request.urlopen(req) as response:
         res = json.load(response)
+        print(res)
         if res == []:
             data = {
                 "state": "failure",
@@ -42,6 +43,7 @@ with open(os.environ.get('GITHUB_EVENT_PATH')) as f:
             exit()
 
         for review in res:
+            print(review)
             user = review["user"]["login"]
             print(user)
             if user != "kanakohonda550":
