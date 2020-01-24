@@ -2,7 +2,7 @@ name: require-approvement
 
 on:
   pull_request_review:
-    types: [submitted]
+    types: submitted
     branches:
     - master
   pull_request:
