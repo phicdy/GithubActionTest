@@ -24,6 +24,7 @@ def post_github_request(url, data):
 
 with open(os.environ.get('GITHUB_EVENT_PATH')) as f:
     event = json.load(f)
+    print(event)
     pr_event = event["pull_request"]
 
     reviews_endpoint = pr_event["_links"]["self"]["href"] + "/reviews"
