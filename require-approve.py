@@ -27,6 +27,11 @@ with open(os.environ.get('GITHUB_EVENT_PATH')) as f:
     print(event)
     pr_event = event["pull_request"]
 
+    print("base ref:" + pr_event["base"]["ref"])
+    if pr_event["base"]["ref"] != "develop":
+        print("not develop")
+        exit()
+
     reviews_endpoint = pr_event["_links"]["self"]["href"] + "/reviews"
     statuses_endopint = pr_event["_links"]["statuses"]["href"]
 
