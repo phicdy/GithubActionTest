@@ -30,6 +30,17 @@ with open(os.environ.get('GITHUB_EVENT_PATH')) as f:
     reviews_endpoint = pr_event["_links"]["self"]["href"] + "/reviews"
     statuses_endopint = pr_event["_links"]["statuses"]["href"]
 
+    labels = pr_event["labels"]
+    for label in labels:
+        if label["name"] == "no_qa_check":
+            data = {
+                "state": "success",
+                "description": "QA check is not required",
+                "context": "approve check"
+            }
+            post_github_request(statuses_endopint, data)
+            exit()
+
     req = create_github_request(reviews_endpoint)
     with urllib.request.urlopen(req) as response:
         res = json.load(response)
