@@ -8,6 +8,7 @@ import urllib.request
 import urllib.parse
 
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
+QA = ["kanakohonda550"]
 
 
 def create_github_request(url, data=None):
@@ -63,7 +64,7 @@ with open(os.environ.get('GITHUB_EVENT_PATH')) as f:
             print(review)
             user = review["user"]["login"]
             print(user)
-            if user != "kanakohonda550":
+            if user not in QA:
                 continue
             if review["state"] == "APPROVED":
                 data = {
