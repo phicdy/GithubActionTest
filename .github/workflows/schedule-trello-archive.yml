@@ -1,0 +1,20 @@
+name: schedule-trello-archive
+
+on:
+  schedule:
+    - cron: '40 15 * * WED' 
+
+jobs:
+  archive_trell_and_post_to_slack:
+    runs-on: ubuntu-latest
+    steps:
+    - name: set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+    - name: Archive trello
+      env:
+        TRELLO_KEY: ${{ secrets.TRELLO_KEY }}
+        TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+      run: |
+        curl --request POST --url "https://api.trello.com/1/lists/5e3ad0b7c606816fe726d57a/archiveAllCards?key=${TRELLO_KEY}&token=${TRELLO_TOKEN}"
