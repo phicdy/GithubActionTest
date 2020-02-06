@@ -2,6 +2,8 @@ name: create-issue
 
 on:
   push:
+    branches:
+    - master
 
 jobs:
   create_issue:
