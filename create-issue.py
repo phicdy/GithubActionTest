@@ -26,7 +26,11 @@ issue_endpoint = "https://api.github.com/repos/phicdy/GithubActionTest/issues"
 
 data = {
     "title": "hoge",
-    "body": "fugafuga",
+    "body": """## aaa
+
+- [ ] hoge
+- [ ] fuga
+""",
     "assignee": "phicdy"
 }
 post_github_request(issue_endpoint, data)
