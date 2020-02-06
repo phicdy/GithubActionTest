@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  unit_test:
+  create_issue:
     runs-on: ubuntu-latest
     steps:
     - name: set up Python
