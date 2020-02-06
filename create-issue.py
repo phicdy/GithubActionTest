@@ -30,8 +30,7 @@ data = {
 
 - [ ] hoge
 - [ ] fuga
-""",
-    "assignee": "phicdy"
+"""
 }
 post_github_request(issue_endpoint, data)
  
