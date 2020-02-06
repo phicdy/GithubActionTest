@@ -7,6 +7,7 @@ jobs:
   create_issue:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v1
     - name: set up Python
       uses: actions/setup-python@v1
       with:
