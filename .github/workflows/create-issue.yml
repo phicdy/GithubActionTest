@@ -11,6 +11,10 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: 3.6
+    - name: ls
+      run: ls
+    - name: pwd
+      run: pwd
     - name: Create issue
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
