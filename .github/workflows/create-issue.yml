@@ -1,0 +1,24 @@
+name: create-issue
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  create_issue:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+    - name: ls
+      run: ls
+    - name: pwd
+      run: pwd
+    - name: Create issue
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: python create-issue.py
