@@ -8,6 +8,7 @@ import urllib.request
 import urllib.parse
 
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
+QA = ["kanakohonda550"]
 
 
 def create_github_request(url, data=None):
@@ -24,10 +25,27 @@ def post_github_request(url, data):
 
 with open(os.environ.get('GITHUB_EVENT_PATH')) as f:
     event = json.load(f)
+    print(event)
     pr_event = event["pull_request"]
+
+    print("base ref:" + pr_event["base"]["ref"])
+    if pr_event["base"]["ref"] != "develop":
+        print("not develop")
+        exit()
 
     reviews_endpoint = pr_event["_links"]["self"]["href"] + "/reviews"
     statuses_endopint = pr_event["_links"]["statuses"]["href"]
+
+    labels = pr_event["labels"]
+    for label in labels:
+        if label["name"] == "no_qa_check":
+            data = {
+                "state": "success",
+                "description": "QA check is not required",
+                "context": "approve check"
+            }
+            post_github_request(statuses_endopint, data)
+            exit()
 
     req = create_github_request(reviews_endpoint)
     with urllib.request.urlopen(req) as response:
@@ -46,7 +64,7 @@ with open(os.environ.get('GITHUB_EVENT_PATH')) as f:
             print(review)
             user = review["user"]["login"]
             print(user)
-            if user != "kanakohonda550":
+            if user not in QA:
                 continue
             if review["state"] == "APPROVED":
                 data = {
