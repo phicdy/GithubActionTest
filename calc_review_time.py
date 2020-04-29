@@ -48,6 +48,7 @@ with urllib.request.urlopen(req) as response:
             first_reviews = dict()
             for review in review_res:
                 reviewer = review["user"]["login"]
+                # アサインされてないけどレビューしたときは除外
                 if reviewer not in asignees:
                     print("review from non assignees")
                     continue
@@ -57,6 +58,7 @@ with urllib.request.urlopen(req) as response:
                 print(submitted)
                 print(pr_created)
                 print(diff.seconds)
+                # 昇順でレビューが返ってくるのでレビューまでの時間が格納済みならスキップ
                 if reviewer in first_reviews.keys():
                     continue
                 first_reviews[reviewer] = diff.seconds
