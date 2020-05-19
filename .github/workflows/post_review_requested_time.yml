@@ -1,0 +1,25 @@
+name: post-review-requested-time
+
+on:
+  pull_request:
+    types: review_requested
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+    - name: comment
+      uses: actions/github-script@1
+      with:
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '1st\n2nd\n3rd'
+          })
