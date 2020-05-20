@@ -24,13 +24,14 @@ def post_github_request(url, data):
 
 
 # TODO closeもcreated_atを参照して見る
-pr_list_endpoint = "https://api.github.com/repos/phicdy/GithubActionTest/pulls?state=open"
+pr_list_endpoint = "https://api.github.com/repos/phicdy/GithubActionTest/pulls?page=1"
 req = create_github_request(pr_list_endpoint)
 with urllib.request.urlopen(req) as response:
     res = json.load(response)
     all_pr_first_reviews = dict()
     review_conuts = dict()
     for pr in res:
+        print(pr["title"])
         pr_user = pr["user"]["login"]
         # requested_reviewersはレビューすると消えるのでassigneesで見る
         asignees = []
@@ -41,10 +42,17 @@ with urllib.request.urlopen(req) as response:
             asignees.append(asignee['login'])
         print(asignees)
 
+        # アサイン時刻をevents APIから取る
+        event_endpoint = "https://api.github.com/repos/phicdy/GithubActionTest/issues/" + str(pr["number"]) + "/events"
+        event_req = create_github_request(event_endpoint)
+        with urllib.request.urlopen(event_req) as event_response:
+            event_res = json.load(event_response)
+
         review_endpoint = pr["url"] + "/reviews"
         review_req = create_github_request(review_endpoint)
         with urllib.request.urlopen(review_req) as review_response:
             review_res = json.load(review_response)
+            # key: reviewer, value: diff seconds
             first_reviews = dict()
             for review in review_res:
                 reviewer = review["user"]["login"]
@@ -53,11 +61,17 @@ with urllib.request.urlopen(req) as response:
                     print("review from non assignees")
                     continue
                 submitted = datetime.strptime(review["submitted_at"], "%Y-%m-%dT%H:%M:%SZ")
-                pr_created = datetime.strptime(pr["created_at"], "%Y-%m-%dT%H:%M:%SZ")
-                diff = submitted - pr_created
-                print(submitted)
-                print(pr_created)
-                print(diff.seconds)
+                
+                for event in event_res:
+                    if event["event"] == "assigned" and event["assignee"]["login"] == reviewer:
+                        assigned_date = datetime.strptime(event["created_at"], "%Y-%m-%dT%H:%M:%SZ")
+                
+                if submitted < assigned_date:
+                    print("assigned after review submitted")
+                    continue
+                
+                diff = submitted - assigned_date
+                print("diff: " + str(diff.seconds) + " seconds, submitted: " + str(submitted) + ", assigned: " + str(assigned_date))
                 # 昇順でレビューが返ってくるのでレビューまでの時間が格納済みならスキップ
                 if reviewer in first_reviews.keys():
                     continue
@@ -70,9 +84,9 @@ with urllib.request.urlopen(req) as response:
                     all_pr_first_reviews[reviewer] = all_pr_first_reviews[reviewer] + diff.seconds
                 else:
                     all_pr_first_reviews[reviewer] = diff.seconds
-            print(first_reviews)
-    print(all_pr_first_reviews)
-    print(review_conuts)
+            #print(first_reviews)
+    #print(all_pr_first_reviews)
+    #print(review_conuts)
 
     for reviewer in all_pr_first_reviews.keys():
         average = all_pr_first_reviews[reviewer] / review_conuts[reviewer]
