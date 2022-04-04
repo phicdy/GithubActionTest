@@ -1,0 +1,17 @@
+name: echo-env
+
+on: workflow_dispatch
+
+jobs:
+  echo-env:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: echo GITHUB_REF
+      run: echo $GITHUB_REF
+    - name: echo GITHUB_REF_NAME
+      run: echo $GITHUB_REF_NAME
+    - name: echo GITHUB_HEAD_REF
+      run: echo $GITHUB_HEAD_REF
+    - name: echo GITHUB_BASE_REF
+      run: echo $GITHUB_BASE_REF
