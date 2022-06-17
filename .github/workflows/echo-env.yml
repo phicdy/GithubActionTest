@@ -15,3 +15,16 @@ jobs:
       run: echo $GITHUB_HEAD_REF
     - name: echo GITHUB_BASE_REF
       run: echo $GITHUB_BASE_REF
+    - name: Skip if last commit date was not yesterday
+      run: |
+        YESTERDAY=`date -d "yesterday" "+%Y/%m/%d"`
+        echo $YESTERDAY
+        last_commit_date=`git log -1 --date=format:"%Y/%m/%d" --format="%ad"`
+        echo $last_commit_date
+        if [ $YESTERDAY = $last_commit_date ]; then
+            echo "Last commit date was yesterday. Code was changed from last test, start test."
+        else
+            echo "Last commit date was $last_commit_date. Skip test."
+            exit 0
+        fi
+      shell: bash
