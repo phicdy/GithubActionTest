@@ -7,7 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: exit
-      run: exit 0
+    - name: check 
+      id: check
+      run: |
+        START_TEST="true"
+        echo "::set-output name=START_TEST::$START_TEST"
     - name: echo hoge
+      if: ${{ steps.check.outputs.START_TEST == 'true' }}
       run: echo hoge
+    - name: echo fuga
+      if: ${{ steps.check.outputs.START_TEST == 'true' }}
+      run: echo fuga
